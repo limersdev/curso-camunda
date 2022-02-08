@@ -1,0 +1,171 @@
+version: "3.8"
+
+services:
+
+  camunda:
+    container_name: camunda
+    build: ./camunda
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl -f http://localhost:8080/actuator/health || exit 1"
+
+  external-task-termometro:
+    container_name: external-task-termometro
+    build: ./external-task-termometro
+    depends_on:
+      - camunda
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: "curl -f http://localhost:8090/actuator/health || exit 1"
+
+  external-task-higrometro:
+    container_name: external-task-higrometro
+    build: ./external-task-higrometro
+    depends_on:
+      - camunda
+    ports:
+      - "8100:8100"
+    healthcheck:
+      test: "curl -f http://localhost:8100/actuator/health || exit 1"
+
+  external-task-ventilador:
+    container_name: external-task-ventilador
+    build: ./external-task-ventilador
+    depends_on:
+      - camunda
+    ports:
+      - "8110:8110"
+    healthcheck:
+      test: "curl -f http://localhost:8110/actuator/health || exit 1"
+
+  external-task-aquecedor:
+    container_name: external-task-aquecedor
+    build: ./external-task-aquecedor
+    depends_on:
+      - camunda
+    ports:
+      - "8120:8120"
+    healthcheck:
+      test: "curl -f http://localhost:8120/actuator/health || exit 1"
+  
+
+  external-task-umidificador:
+    container_name: external-task-umidificador
+    build: ./external-task-umidificador
+    depends_on:
+      - camunda
+    ports:
+      - "8130:8130"
+    healthcheck:
+      test: "curl -f http://localhost:8130/actuator/health || exit 1"
+
+  external-task-exaustor:
+    container_name: external-task-exaustor
+    build: ./external-task-exaustor
+    depends_on:
+      - camunda
+    ports:
+      - "8140:8140"
+    healthcheck:
+      test: "curl -f http://localhost:8140/actuator/health || exit 1"
+
+  
+
+########################################################################################################################
+# Mocks
+########################################################################################################################
+
+  wiremock:
+    container_name: wiremock
+    image: rodolpheche/wiremock
+    ports:
+      - '8200:8080'
+
+########################################################################################################################
+# Elasticstack & Grafana
+########################################################################################################################
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    healthcheck:
+      test: "curl -f http://localhost:9200 || exit 1"
+
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    container_name: logstash
+    restart: unless-stopped
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline/
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: "curl -f http://localhost:9600 || exit 1"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: "curl -f http://localhost:5601 || exit 1"
+
+  filebeat:
+    build: config/filebeat
+    container_name: filebeat
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/usr/share/dockerlogs/data:ro
+    depends_on:
+      - elasticsearch
+      - logstash
+    healthcheck:
+      test: filebeat test config
+      interval: 30s
+      timeout: 15s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:v2.33.1
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9090" ]
+
+  grafana:
+    image: grafana/grafana:8.3.4
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "3000" ]

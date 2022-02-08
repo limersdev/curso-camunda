@@ -1,0 +1,54 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+
+  - job_name: 'camunda'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+        labels:
+          application: camunda
+
+  - job_name: 'external-task-termometro'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8090' ]
+        labels:
+          application: external-task-termometro
+
+  - job_name: 'external-task-higrometro'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8100' ]
+        labels:
+          application: external-task-higrometro
+
+  - job_name: 'external-task-ventilador'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8110' ]
+        labels:
+          application: external-task-ventilador
+
+  - job_name: 'external-task-aquecedor'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8120' ]
+        labels:
+          application: external-task-aquecedor
+
+  - job_name: 'external-task-umidificador'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8130' ]
+        labels:
+          application: external-task-umidificador
+
+  - job_name: 'external-task-exaustor'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8140' ]
+        labels:
+          application: external-task-exaustor

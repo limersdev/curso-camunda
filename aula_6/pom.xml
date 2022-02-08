@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>br.com.plantacao</groupId>
+    <artifactId>automacao-plantacao</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>automacao-plantacao</name>
+    <description>Automacao de uma plantacao com docker, elk e grafana</description>
+
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
+    <modules>
+        <module>camunda</module>
+        <module>external-task-termometro</module>
+        <module>external-task-higrometro</module>
+        <module>external-task-ventilador</module>
+        <module>external-task-aquecedor</module>
+        <module>external-task-umidificador</module>
+        <module>external-task-exaustor</module>
+    </modules>
+
+</project>

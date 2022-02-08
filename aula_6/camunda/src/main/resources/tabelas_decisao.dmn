@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_0x6ppyz" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.12.0">
+  <decision id="tabela_temperaturas" name="tabela_temperaturas">
+    <decisionTable id="DecisionTable_1lnzyki">
+      <input id="Input_1" label="temperatura" camunda:inputVariable="temperatura">
+        <inputExpression id="InputExpression_1" typeRef="integer">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="operacao_aquecedor" name="operacao_aquecedor" typeRef="boolean" biodi:width="192" />
+      <output id="OutputClause_039ixsm" label="operacao_ventilador" name="operacao_ventilador" typeRef="boolean" biodi:width="192" />
+      <output id="OutputClause_0lbliln" label="verificar_temperatura" name="verificar_temperatura" typeRef="boolean" />
+      <rule id="DecisionRule_1umdvqj">
+        <inputEntry id="UnaryTests_1c3vfmb">
+          <text>&lt;15</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0cf51d4">
+          <text>true</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0wacq3q">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_05sbem8">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0jk63jm">
+        <inputEntry id="UnaryTests_1kmx5ui">
+          <text>&gt;29</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0diqwg3">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_01kl7jt">
+          <text>true</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0qi1s10">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_00f3dx3">
+        <inputEntry id="UnaryTests_1uvstg9">
+          <text>[15..29]</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_09twwc6">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1uzyx3z">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1ytr7mu">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="tabela_umidade" name="tabela_umidade">
+    <decisionTable id="DecisionTable_1td508c">
+      <input id="InputClause_1mo817j" label="umidade" camunda:inputVariable="umidade">
+        <inputExpression id="LiteralExpression_02pihhs" typeRef="integer" />
+      </input>
+      <output id="OutputClause_04hgsth" label="operacao_exaustor" name="operacao_exaustor" typeRef="boolean" />
+      <output id="OutputClause_1gmoob6" label="operacao_umidificador" name="operacao_umidificador" typeRef="boolean" biodi:width="192" />
+      <output id="OutputClause_1p9pr5y" label="verificar_umidade" name="verificar_umidade" typeRef="boolean" />
+      <rule id="DecisionRule_1ocv227">
+        <inputEntry id="UnaryTests_0rky1n6">
+          <text>&lt;50</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_030fkm6">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0up2h3d">
+          <text>true</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0cc8fwe">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0vj7sr2">
+        <inputEntry id="UnaryTests_15vwmc7">
+          <text>&gt;70</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1s8xl1k">
+          <text>true</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0g356lp">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0ep20ev">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1lsldhj">
+        <inputEntry id="UnaryTests_0g37sf1">
+          <text>[50..70]</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1octwn0">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0bi1710">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0f9tfx6">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="tabela_temperaturas">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1oe64nu" dmnElementRef="tabela_umidade">
+        <dc:Bounds height="80" width="180" x="190" y="240" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
